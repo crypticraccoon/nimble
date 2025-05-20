@@ -1,5 +1,5 @@
 import 'package:client/config/provider.dart';
-import 'package:client/routing/routing.dart';
+import 'package:client/router/router.dart';
 import 'package:client/ui/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

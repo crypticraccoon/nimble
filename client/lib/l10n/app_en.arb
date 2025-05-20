@@ -1,0 +1,49 @@
+{
+	 "helloWorld": "Hello World!",
+	 "@helloWorld": {
+			"description": "The conventional newborn programmer greeting"
+	 },
+		 
+
+	 "appTitle": "Todo",
+
+	 "login":"Login",
+
+	 "emailPlaceholder":"Email",
+	 "passwordPlaceholder":"Password",
+
+
+	 "forgotPassword":"Forgot Password?",
+	 "noAccount":"Need an account?",
+	 "tapHere":"Tap here!",
+
+	 "register":"Register",
+
+
+	 "logOut":"Log Out",
+
+	 "popUpConfirmationTitle":"Are you sure?",
+	 "popUpLogOutConfirmationDesc":"You will be logged out.",
+	 "popUpConfirm":"Confirm",
+	 "popUpCancel":"Cancel",
+
+	
+
+	 
+	 "passwordRecoverEmailPageHeader":"Forgot Password?",
+	 "passwordRecoverEmailPageDesc":"Please enter your account's email below. We will send you a recovery link to help change your password.",
+	 "sendEmail":"Send Email",
+	 "updatePassword":"Update Password",
+	 "confirmPassword":"Confirm Password",
+	 "mismatchPasswords":"Mismatch Passwords. Please fix.",
+	 "missingInformation":"Please fill out all information.",
+	 "registrationPageHeader":"Register",
+	 "registrationPageDesc":"Please fill out the form below to create an account with us.",
+	 "verifyEmail":"Verify Email",
+	 "registerUserPageHeader":"Register User Information",
+	 "registerUserPageDesc":"Almost there! Just fill out the form below to finalize your accout with us!",
+	 "usernamePlaceholder":"Username",
+	 "forgotPasswordPlaceholder":"Email",
+	 "recoverUpdatePasswordHeader":"Almost there!",
+	 "recoverUpdatePasswordDesc":"Confirm your new password below."
+}

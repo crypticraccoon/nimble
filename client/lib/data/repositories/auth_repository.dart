@@ -1,0 +1,248 @@
+import 'package:client/data/services/api/client.dart';
+import 'package:client/data/services/models/login_response/login_response.dart';
+import 'package:client/data/services/models/user_data_response/user_data_response.dart';
+import 'package:client/data/services/shared_prefrences_service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import '../../../utils/result.dart';
+
+abstract class AuthRepository extends ChangeNotifier {
+  Future<bool> get isAuthenticated;
+
+  Future<Result<String?>> login({
+    required String email,
+    required String password,
+  });
+  Future<Result<void>> getUserData();
+  Future<Result<void>> logout();
+
+  Future<Result<String>> sendPasswordRecoveryEmail({required String email});
+  Future<Result<String>> updateRecoveryPassword({
+    required String email,
+    required String code,
+    required String password,
+  });
+
+  Future<Result<String>> registerUser({
+    required String email,
+    required String password,
+  });
+
+  Future<Result<String>> registerUserData({
+    required String username,
+    required String id,
+    required String code,
+  });
+}
+
+class AuthRepositoryRemote extends AuthRepository {
+  AuthRepositoryRemote({
+    //required ApiClient apiClient,
+    required AuthApiClient authApiClient,
+    required SharedPreferencesService sharedPreferencesService,
+  }) : //_apiClient = apiClient,
+       _authApiClient = authApiClient,
+       _sharedPreferencesService = sharedPreferencesService {
+    //_apiClient.authHeaderProvider = _authHeaderProvider;
+  }
+
+  final AuthApiClient _authApiClient;
+  //final ApiClient _apiClient;
+  final SharedPreferencesService _sharedPreferencesService;
+
+  bool? _isAuthenticated;
+  String? _authToken;
+
+  /// Fetch token from shared preferences
+  Future<void> _fetch() async {
+    final result = await _sharedPreferencesService.fetchAccessToken();
+    switch (result) {
+      case Ok<String?>():
+        _authToken = result.value;
+        _isAuthenticated = result.value != null;
+      case Error<String?>():
+      //_log.severe(
+      //'Failed to fech Token from SharedPreferences',
+      //result.error,
+      //);
+    }
+  }
+
+  Future<String?> _fetchAccessToken() async {
+    final result = await _sharedPreferencesService.fetchAccessToken();
+    switch (result) {
+      case Ok<String?>():
+        Result.ok(result);
+      case Error<String?>():
+        await _sharedPreferencesService.saveTokens(null, null);
+        _authToken = null;
+        _isAuthenticated = false;
+        return null;
+    }
+  }
+
+  @override
+  Future<bool> get isAuthenticated async {
+    if (_isAuthenticated != null) {
+      return _isAuthenticated!;
+    }
+    await _fetch();
+    return _isAuthenticated ?? false;
+  }
+
+  @override
+  Future<Result<String?>> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final result = await _authApiClient.login(
+        email: email,
+        password: password,
+      );
+      switch (result) {
+        case Ok<LoginResponse>():
+          _isAuthenticated = true;
+          _authToken = result.value.token_data.access_token;
+          await _sharedPreferencesService.saveTokens(
+            result.value.token_data.access_token,
+            result.value.token_data.refresh_token,
+          );
+          return Result.ok(null);
+        case Error<LoginResponse>():
+          return Result.error(result.error);
+      }
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  @override
+  Future<Result<void>> getUserData() async {
+    final accessToken = await _fetchAccessToken();
+
+    try {
+      final result = await _authApiClient.getUserData(
+        accessToken: accessToken!,
+      );
+      switch (result) {
+        case Ok<UserDataResponse>():
+          await _sharedPreferencesService.saveUserData(
+            email: result.value.email,
+            username: result.value.username,
+            id: result.value.id,
+          );
+          return Result.ok(null);
+        case Error<UserDataResponse>():
+          return Result.error(result.error);
+      }
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  @override
+  Future<Result<void>> logout() async {
+    try {
+      final result = await _sharedPreferencesService.saveTokens(null, null);
+      if (result is Error<String>) {
+        return Result.error(result.error);
+      }
+      _authToken = null;
+      _isAuthenticated = false;
+      return result;
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  @override
+  Future<Result<String>> sendPasswordRecoveryEmail({
+    required String email,
+  }) async {
+    try {
+      final result = await _authApiClient.sendPasswordRecoveryEmail(
+        email: email,
+      );
+      switch (result) {
+        case Ok<String>():
+          return Result.ok(result.value.toString());
+        case Error<String>():
+          return Result.error(result.error);
+      }
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  @override
+  Future<Result<String>> updateRecoveryPassword({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    try {
+      final result = await _authApiClient.updateRecoveryPassword(
+        email: email,
+        code: code,
+        password: password,
+      );
+      switch (result) {
+        case Ok<String>():
+          return Result.ok(result.value.toString());
+        case Error<String>():
+          return Result.error(result.error);
+      }
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  @override
+  Future<Result<String>> registerUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final result = await _authApiClient.registerUser(
+        email: email,
+        password: password,
+      );
+      switch (result) {
+        case Ok<String>():
+          return Result.ok(result.value.toString());
+        case Error<String>():
+          return Result.error(result.error);
+      }
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  @override
+  Future<Result<String>> registerUserData({
+    required String username,
+    required String id,
+    required String code,
+  }) async {
+    try {
+      final result = await _authApiClient.registerUserData(
+        username: username,
+        id: id,
+        code: code,
+      );
+      switch (result) {
+        case Ok<String>():
+          return Result.ok(result.value.toString());
+        case Error<String>():
+          return Result.error(result.error);
+      }
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  String? _authHeaderProvider() =>
+      _authToken != null ? 'Bearer $_authToken' : null;
+}

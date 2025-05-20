@@ -15,7 +15,7 @@ class RecoveryScreen extends StatefulWidget {
 }
 
 class _RecoveryScreen extends State<RecoveryScreen> {
-  final TextEditingController _email = TextEditingController(text: 'maahase@hotmail.com');
+  final TextEditingController _email = TextEditingController(text: '');
 
   @override
   void initState() {

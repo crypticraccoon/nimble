@@ -19,9 +19,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreen extends State<LoginScreen> {
   final TextEditingController _email = TextEditingController(
-    text: 'maahase@hotmail.com',
+    text: '',
   );
-  final TextEditingController _password = TextEditingController(text: 'test');
+  final TextEditingController _password = TextEditingController(text: '');
   bool _obscurePassword = true;
 
   @override

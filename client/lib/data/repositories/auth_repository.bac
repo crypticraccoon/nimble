@@ -1,4 +1,5 @@
-import 'package:client/data/services/api/client.dart';
+import 'package:client/data/services/api/auth.dart';
+import 'package:client/data/services/api/todo.dart';
 import 'package:client/data/services/models/login_response/login_response.dart';
 import 'package:client/data/services/models/user_data_response/user_data_response.dart';
 import 'package:client/data/services/shared_prefrences_service.dart';
@@ -38,17 +39,17 @@ abstract class AuthRepository extends ChangeNotifier {
 
 class AuthRepositoryRemote extends AuthRepository {
   AuthRepositoryRemote({
-    //required ApiClient apiClient,
+    required TodoApiClient todoApiClient,
     required AuthApiClient authApiClient,
     required SharedPreferencesService sharedPreferencesService,
-  }) : //_apiClient = apiClient,
+  }) : _todoApiClient = todoApiClient,
        _authApiClient = authApiClient,
        _sharedPreferencesService = sharedPreferencesService {
-    //_apiClient.authHeaderProvider = _authHeaderProvider;
+    _todoApiClient.authHeaderProvider = _authHeaderProvider;
   }
 
   final AuthApiClient _authApiClient;
-  //final ApiClient _apiClient;
+  final TodoApiClient _todoApiClient;
   final SharedPreferencesService _sharedPreferencesService;
 
   bool? _isAuthenticated;
@@ -62,10 +63,6 @@ class AuthRepositoryRemote extends AuthRepository {
         _authToken = result.value;
         _isAuthenticated = result.value != null;
       case Error<String?>():
-      //_log.severe(
-      //'Failed to fech Token from SharedPreferences',
-      //result.error,
-      //);
     }
   }
 

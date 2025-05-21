@@ -73,7 +73,12 @@ func (a *Api) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Api) logout(w http.ResponseWriter, r *http.Request) {
+	id := r.Context().Value("userID")
+	if id == nil {
+		response.WithError(w, http.StatusForbidden, cerror.ERR_API_LOGOUT_FAILED.Error(), cerror.ERR_API_LOGOUT_FAILED)
+		return
 
+	}
 	userId := uuid.FromStringOrNil(r.Context().Value("userID").(string))
 
 	if err := a.database.RemoveRefreshToken(a.context, userId); err != nil {

@@ -45,5 +45,11 @@
 	 "usernamePlaceholder":"Username",
 	 "forgotPasswordPlaceholder":"Email",
 	 "recoverUpdatePasswordHeader":"Almost there!",
-	 "recoverUpdatePasswordDesc":"Confirm your new password below."
+	 "recoverUpdatePasswordDesc":"Confirm your new password below.",
+
+
+	 "settingsAccountTitle":"Account",
+	 "settingsUpdateUsername":"Change Username"
+
+
 }

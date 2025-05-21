@@ -28,6 +28,23 @@ func (a *Api) sendRecoveryEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if isValidEmail := data.IsValidEmail(); !isValidEmail {
+		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_MALFORMED_EMAIL.Error(), cerror.ERR_API_MALFORMED_EMAIL)
+		return
+	}
+
+	isTaken, err := a.database.IsEmailTaken(a.context, data.Email)
+	if err != nil {
+		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_FAILED_TO_SEND_RECOVERY_EMAIL.Error(), err)
+		return
+	}
+
+	if !isTaken {
+		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_EMAIL_NOT_FOUND.Error(), cerror.ERR_API_EMAIL_NOT_FOUND)
+		return
+
+	}
+
 	recoveryCode := utils.CreateCode()
 	if err = a.database.SetRecoveryCode(a.context, data.Email, recoveryCode); err != nil {
 		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_FAILED_TO_SEND_RECOVERY_EMAIL.Error(), err)

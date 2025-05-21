@@ -1,12 +1,11 @@
 import 'package:client/ui/recover/recover/view_mode/recover_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
 
 class RecoveryScreen extends StatefulWidget {
   const RecoveryScreen({super.key, required this.viewModel});
 
-  final RecoverViewmodel viewModel;
+  final RecoveryViewmodel viewModel;
 
   @override
   State<StatefulWidget> createState() {

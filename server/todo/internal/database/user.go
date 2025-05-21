@@ -31,8 +31,8 @@ func (d *Database) GetUserByCredentials(ctx context.Context, data *models.Login)
 
 func (d *Database) GetUser(ctx context.Context, id uuid.UUID) (*models.User, error) {
 	var user models.User
-	sql := `SELECT id, email FROM users WHERE id = $1`
-	err := d.conn.QueryRow(ctx, sql, id).Scan(&user.Id, &user.Email)
+	sql := `SELECT id, email, username FROM users WHERE id = $1`
+	err := d.conn.QueryRow(ctx, sql, id).Scan(&user.Id, &user.Email, &user.Username)
 	if err != nil {
 		return nil, err
 	}

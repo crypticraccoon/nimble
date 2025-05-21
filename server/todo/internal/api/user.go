@@ -35,6 +35,8 @@ func (a *Api) getUserData(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Api) updateUsername(w http.ResponseWriter, r *http.Request) {
+	id := uuid.FromStringOrNil(r.Context().Value("userID").(string))
+
 	data := models.Username{}
 	err := json.NewDecoder(r.Body).Decode(&data)
 
@@ -43,7 +45,7 @@ func (a *Api) updateUsername(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = a.database.UpdateUsername(a.context, data.Id, data.Username); err != nil {
+	if err = a.database.UpdateUsername(a.context, id, data.Username); err != nil {
 
 		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_FAILED_UPDATE_USERNAME.Error(), err)
 		return
@@ -53,6 +55,9 @@ func (a *Api) updateUsername(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Api) updatePassword(w http.ResponseWriter, r *http.Request) {
+
+	id := uuid.FromStringOrNil(r.Context().Value("userID").(string))
+
 	user := models.User{}
 
 	data := models.Password{}
@@ -68,7 +73,7 @@ func (a *Api) updatePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pwdHash, err := a.database.GetPasswordHash(a.context, data.Id)
+	pwdHash, err := a.database.GetPasswordHash(a.context, id)
 	if err != nil {
 		response.WithError(w, http.StatusInternalServerError, cerror.ERR_DB_QUERY_FAILED.Error(), err)
 		return
@@ -85,7 +90,7 @@ func (a *Api) updatePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = a.database.UpdatePassword(a.context, data.Id, string(newPasswordHash)); err != nil {
+	if err = a.database.UpdatePassword(a.context, id, string(newPasswordHash)); err != nil {
 		response.WithError(w, http.StatusInternalServerError, cerror.ERR_DB_QUERY_FAILED.Error(), err)
 		return
 	}
@@ -94,6 +99,8 @@ func (a *Api) updatePassword(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Api) updateEmail(w http.ResponseWriter, r *http.Request) {
+	id := uuid.FromStringOrNil(r.Context().Value("userID").(string))
+
 	data := models.Email{}
 	err := json.NewDecoder(r.Body).Decode(&data)
 
@@ -117,7 +124,7 @@ func (a *Api) updateEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = a.database.UpdateEmail(a.context, data.Id, data.Email); err != nil {
+	if err = a.database.UpdateEmail(a.context, id, data.Email); err != nil {
 		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_FAILED_TO_UPDATE_EMAIL.Error(), err)
 		return
 	}

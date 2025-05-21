@@ -1,18 +1,18 @@
-import 'package:client/data/repositories/auth_repository.dart';
+import 'package:client/data/repositories/api_repository.dart';
 import 'package:client/utils/command.dart';
 import 'package:client/utils/result.dart';
 import 'package:flutter/material.dart';
 
 class NewUserViewmodel extends ChangeNotifier {
-  NewUserViewmodel({required AuthRepository authRepository})
-    : _authRepository = authRepository {
+  NewUserViewmodel({required RegistrationRepository registrationRepository})
+    : _registrationRepository = registrationRepository {
     registerUserData =
         Command1<void, (String username, String id, String code)>(
           _registerUserData,
         );
   }
 
-  final AuthRepository _authRepository;
+  final RegistrationRepository _registrationRepository;
 
   late Command1 registerUserData;
 
@@ -20,7 +20,7 @@ class NewUserViewmodel extends ChangeNotifier {
     (String username, String id, String code) credentials,
   ) async {
     final (username, id, code) = credentials;
-    final result = await _authRepository.registerUserData(
+    final result = await _registrationRepository.setUserData(
       username: username,
       id: id,
       code: code,

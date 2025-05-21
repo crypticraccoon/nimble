@@ -56,12 +56,18 @@ func (a *Api) getTodoStats(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Api) createTodo(w http.ResponseWriter, r *http.Request) {
+	println("create endpint hit")
+	userId := uuid.FromStringOrNil(r.Context().Value("userID").(string))
+
+
+
 	var data *models.Todo
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_MALFORMED_DATA.Error(), err)
 		return
 	}
+	data.UserId = userId
 
 	data = data.New(data)
 

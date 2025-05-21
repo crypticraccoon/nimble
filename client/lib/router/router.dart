@@ -1,7 +1,8 @@
-import 'package:client/data/repositories/auth_repository.dart';
-import 'package:client/routing/routes.dart';
+import 'package:client/data/repositories/api_repository.dart';
+import 'package:client/router/routes.dart';
 import 'package:client/ui/auth/login/view_model/login_viewmodel.dart';
 import 'package:client/ui/auth/login/widgets/login_screen.dart';
+import 'package:client/ui/home/view_models/home_viewmodel.dart';
 import 'package:client/ui/home/widgets/home_screen.dart';
 import 'package:client/ui/recover/recover/view_mode/recover_viewmodel.dart';
 import 'package:client/ui/recover/recover/widgets/recovery_screen.dart';
@@ -11,8 +12,14 @@ import 'package:client/ui/registration/newuser/view_model/newser_screen.dart';
 import 'package:client/ui/registration/newuser/view_model/registration_viewmodel.dart';
 import 'package:client/ui/registration/newuser/widgets/newuser_viewmodel.dart';
 import 'package:client/ui/registration/registration/widgets/registration_screen.dart';
+import 'package:client/ui/settings/email/view_models/update_email_viewmodel.dart';
+import 'package:client/ui/settings/email/widgets/update_email_screen.dart';
+import 'package:client/ui/settings/password/view_models/update_password_viewmodel.dart';
+import 'package:client/ui/settings/password/widgets/update_password_screen.dart';
 import 'package:client/ui/settings/settings/view_models/settings_viewmodel.dart';
 import 'package:client/ui/settings/settings/widgets/setting_screen.dart';
+import 'package:client/ui/settings/username/view_models/update_username_viewmodel.dart';
+import 'package:client/ui/settings/username/widgets/update_username_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +50,7 @@ GoRoute _recovery() {
 
     builder: (context, state) {
       return RecoveryScreen(
-        viewModel: RecoverViewmodel(authRepository: context.read()),
+        viewModel: RecoveryViewmodel(recoveryRepository: context.read()),
       );
     },
 
@@ -54,7 +61,9 @@ GoRoute _recovery() {
           return UpdateScreen(
             email: state.pathParameters['email']!,
             code: state.pathParameters['code']!,
-            viewModel: UpdatePasswordViewmodel(authRepository: context.read()),
+            viewModel: UpdatePasswordViewmodel(
+              recoveryRepository: context.read(),
+            ),
           );
         },
       ),
@@ -67,7 +76,9 @@ GoRoute _register() {
     path: Routes.register,
     builder: (context, state) {
       return RegistrationScreen(
-        viewModel: RegistrationViewmodel(authRepository: context.read()),
+        viewModel: RegistrationViewmodel(
+          registrationRepository: context.read(),
+        ),
       );
     },
 
@@ -78,7 +89,7 @@ GoRoute _register() {
           return NewUserScreen(
             id: state.pathParameters['id']!,
             code: state.pathParameters['code']!,
-            viewModel: NewUserViewmodel(authRepository: context.read()),
+            viewModel: NewUserViewmodel(registrationRepository: context.read()),
           );
         },
       ),
@@ -90,8 +101,19 @@ GoRoute _home() {
   return GoRoute(
     path: Routes.home,
     builder: (context, state) {
+      final viewModel = HomeViewModel(
+        userRepository: context.read(),
+        todoRepository: context.read(),
+        sharedPrefrences: context.read(),
+      );
+      viewModel.loadUserData.execute();
+      viewModel.getUsername.execute();
       return HomeScreen(
-        //viewModel: LoginViewModel(authRepository: context.read()),
+        viewModel: HomeViewModel(
+          userRepository: context.read(),
+          todoRepository: context.read(),
+          sharedPrefrences: context.read(),
+        ),
       );
     },
     routes: [_settings()],
@@ -103,10 +125,38 @@ GoRoute _settings() {
     path: Routes.settings,
     builder: (context, state) {
       return SettingsScreen(
-        viewModel: SettingsViewModel(authRepository: context.read()),
+        viewModel: SettingsViewModel(
+          userRepository: context.read(),
+          authRepository: context.read(),
+        ),
       );
     },
-    routes: [],
+    routes: [
+      GoRoute(
+        path: Routes.settingsUpdateUsername,
+        builder: (context, state) {
+          return UpdateUsernameScreen(
+            viewModel: UpdateUsernameViewmodel(userRepository: context.read()),
+          );
+        },
+      ),
+      GoRoute(
+        path: Routes.settingsUpdatePassword,
+        builder: (context, state) {
+          return UpdatePasswordScreen(
+            viewModel: UpdatePasswordViewModel(userRepository: context.read()),
+          );
+        },
+      ),
+      GoRoute(
+        path: Routes.settingsUpdateEmail,
+        builder: (context, state) {
+          return UpdateEmailScreen(
+            viewModel: UpdateEmailViewmodel(userRepository: context.read()),
+          );
+        },
+      ),
+    ],
   );
 }
 

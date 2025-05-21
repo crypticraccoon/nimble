@@ -15,7 +15,7 @@ abstract final class Routes {
 
   // Settings
   static const settings = '/settings';
-  static const settingsUpdatePassword = '/update/password';
-  static const settingsUpdateUsername = '/update/username';
-  static const settingsUpdateEmail = '/update/email';
+  static const settingsUpdatePassword = '/password';
+  static const settingsUpdateUsername = '/username';
+  static const settingsUpdateEmail = '/email';
 }

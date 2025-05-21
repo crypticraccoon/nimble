@@ -29,13 +29,14 @@ func (a *Api) InitApi() {
 
 	a.router.Get("/.well-known/assetlinks.json", a.serveAssetLinks)
 
-	a.router.Get("/hello", func(w http.ResponseWriter, r *http.Request) {
-		response.WithJson(w, "Hello world.")
-	})
-
 	a.router.Route("/v1", func(r chi.Router) {
+		a.router.Get("/hello", func(w http.ResponseWriter, r *http.Request) {
+			response.WithJson(w, "Hello world.")
+		})
 		r.Use(otelhttp.NewMiddleware(""))
 		r.Post("/login", a.login)
+		r.Post("/refresh", a.refresh)
+		r.Post("/logout", a.logout)
 
 		r.Route("/register", func(r chi.Router) {
 			r.Post("/", a.register)
@@ -52,15 +53,12 @@ func (a *Api) InitApi() {
 		authRouter := chi.NewRouter()
 		r.Mount("/a", authRouter)
 		authRouter.With(middlewares.AuthMiddleware).Route("/", func(r chi.Router) {
-			r.Post("/logout", a.logout)
-			r.Post("/refresh", a.refresh)
-
 			r.Route("/todo", func(r chi.Router) {
 				r.Post("/create", a.createTodo)
-				r.Patch("/complete/{id}", a.completeTodo)
 				r.Get("/{id}", a.getTodo)
 				r.Get("/{date}/{size}/{page}", a.getTodosByDate) // NOTE: yyyy-mm-dd
 				r.Get("/completed/{size}/{page}", a.getCompletedTodos)
+				r.Patch("/complete/{id}", a.completeTodo)
 				r.Get("/stats", a.getTodoStats)
 				r.Put("/update", a.updateTodo)
 				r.Delete("/delete/{id}", a.deleteTodo)

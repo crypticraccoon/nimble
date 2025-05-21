@@ -33,8 +33,8 @@ type UserResponse struct {
 }
 
 type Username struct {
-	Id       uuid.UUID `json:"id"`
-	Username string    `json:"username"`
+	//Id       uuid.UUID `json:"id"`
+	Username string `json:"username"`
 }
 
 type UserAdditionalData struct {
@@ -62,9 +62,9 @@ func (p *RecoveryPassword) IsValid() bool {
 }
 
 type Password struct {
-	Id          uuid.UUID `json:"id"`
-	Password    string    `json:"password"`
-	NewPassword string    `json:"new_password"`
+	//Id          uuid.UUID `json:"id"`
+	Password    string `json:"password"`
+	NewPassword string `json:"new_password"`
 }
 
 func (p *Password) IsValid() bool {
@@ -75,8 +75,13 @@ func (p *Password) IsValid() bool {
 }
 
 type Email struct {
-	Id    uuid.UUID `json:"id"`
-	Email string    `json:"email"`
+	//Id    uuid.UUID `json:"id"`
+	Email string `json:"email"`
+}
+
+func (e *Recovery) IsValidEmail() bool {
+	_, err := mail.ParseAddress(e.Email)
+	return err == nil
 }
 
 func (e *Email) IsValidEmail() bool {

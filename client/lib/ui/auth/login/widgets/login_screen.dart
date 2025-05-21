@@ -1,4 +1,4 @@
-import 'package:client/routing/routes.dart';
+import 'package:client/router/routes.dart';
 import 'package:client/ui/auth/login/view_model/login_viewmodel.dart';
 import 'package:client/ui/core/theme/dimens.dart';
 import 'package:flutter/gestures.dart';
@@ -18,10 +18,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreen extends State<LoginScreen> {
-  final TextEditingController _email = TextEditingController(
-    text: '',
-  );
-  final TextEditingController _password = TextEditingController(text: '');
+  final TextEditingController _email = TextEditingController(text: 'maahase@hotmail.com');
+  final TextEditingController _password = TextEditingController(text: 'test');
   bool _obscurePassword = true;
 
   @override
@@ -146,23 +144,25 @@ class _LoginScreen extends State<LoginScreen> {
                             builder: (context, _) {
                               return FilledButton(
                                 onPressed: () {
-                                  //if (_email.value.text == "" ||
-                                  //_password.value.text == "") {
-                                  //ScaffoldMessenger.of(context).showSnackBar(
-                                  //SnackBar(
-                                  //content: Text(
-                                  //AppLocalizations.of(
-                                  //context,
-                                  //)!.missingInformation,
-                                  //),
-                                  //),
-                                  //);
-                                  //} else {
-                                  widget.viewModel.login.execute((
-                                    _email.value.text,
-                                    _password.value.text,
-                                  ));
-                                  //}
+                                  if (_email.value.text == "" ||
+                                      _password.value.text == "") {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.missingInformation,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    widget.viewModel.login.running
+                                        ? null
+                                        : widget.viewModel.login.execute((
+                                          _email.value.text,
+                                          _password.value.text,
+                                        ));
+                                  }
                                 },
                                 child: Text(
                                   AppLocalizations.of(context)!.login,

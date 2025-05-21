@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
+	 //print(DateTime.utc().toIso8601String())
   runApp(MultiProvider(providers: providers, child: const MainApp()));
 }
 

@@ -281,7 +281,6 @@ class TodoRepository {
   //Create Todo
 
   Future<Result<TodoResponse>> createTodo({
-    required String accessToken,
     required String title,
     required String body,
     required DateTime deadline,
@@ -386,7 +385,6 @@ class TodoRepository {
 
   // Updated Todo
   Future<Result<String?>> updateTodo({
-    required String accessToken,
     required String todoId,
     required String title,
     required String body,
@@ -410,7 +408,6 @@ class TodoRepository {
 
   // Updated Todo
   Future<Result<String?>> deleteTodo({
-    required String accessToken,
     required String todoId,
   }) async {
     final result = await _apiClient.deleteTodo(

@@ -11,6 +11,7 @@ abstract final class Routes {
 
   // Todo
   static const home = "/home";
+  static const createTodo = "/create";
   static const todo = "/:id";
 
   // Settings

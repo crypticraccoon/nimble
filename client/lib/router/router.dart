@@ -2,7 +2,9 @@ import 'package:client/data/repositories/api_repository.dart';
 import 'package:client/router/routes.dart';
 import 'package:client/ui/auth/login/view_model/login_viewmodel.dart';
 import 'package:client/ui/auth/login/widgets/login_screen.dart';
+import 'package:client/ui/home/view_models/create_todo_viewmodel.dart';
 import 'package:client/ui/home/view_models/home_viewmodel.dart';
+import 'package:client/ui/home/widgets/create_todo_screen.dart';
 import 'package:client/ui/home/widgets/home_screen.dart';
 import 'package:client/ui/recover/recover/view_mode/recover_viewmodel.dart';
 import 'package:client/ui/recover/recover/widgets/recovery_screen.dart';
@@ -116,7 +118,18 @@ GoRoute _home() {
         ),
       );
     },
-    routes: [_settings()],
+    routes: [
+      _settings(),
+
+      GoRoute(
+        path: Routes.createTodo,
+        builder: (context, state) {
+          return CreateTodoScreen(
+            viewModel: CreateTodoViewModel(todoRepository: context.read()),
+          );
+        },
+      ),
+    ],
   );
 }
 

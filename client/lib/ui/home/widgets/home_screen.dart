@@ -58,7 +58,9 @@ class _HomeScreen extends State<HomeScreen> {
         ),
         actions: <Widget>[
           FilledButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              context.go("/home/create");
+            },
             icon: const Icon(Icons.add),
             label: const Text('Add Todo'),
           ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-//Check how change notifier listens to a get request on load?
+//NOTE: Check how change notifier listens to a get request on load?
 
 class CreateTodoScreen extends StatefulWidget {
   const CreateTodoScreen({super.key, required this.viewModel});
@@ -63,45 +63,27 @@ class _CreateTodoScreen extends State<CreateTodoScreen> {
 
   void _updateTextField() {
     if (_selectedDateTime != null) {
-      // Using intl package for flexible formatting
-      // You can customize the format string as needed
       final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
       _deadline.text = formatter.format(_selectedDateTime!);
     } else {
-      _deadline.text = ''; // Clear text if no date is selected
+      _deadline.text = '';
     }
   }
 
-  // Function to show date and time pickers
   Future<void> _selectDateTime(BuildContext context) async {
-    // 1. Show Date Picker
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDateTime ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050),
       helpText: 'Select Date',
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Colors.blueAccent, // Header background color
-              onPrimary: Colors.white, // Header text color
-              onSurface: Colors.black, // Body text color
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.blueAccent, // Button text color
-              ),
-            ),
-          ),
-          child: child!,
-        );
+
+      builder: (_, child) {
+        return child!;
       },
     );
 
     if (pickedDate != null) {
-      // 2. Show Time Picker only if a date was picked
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime:
@@ -109,27 +91,12 @@ class _CreateTodoScreen extends State<CreateTodoScreen> {
                 ? TimeOfDay.fromDateTime(_selectedDateTime!)
                 : TimeOfDay.now(),
         helpText: 'Select Time',
-        builder: (context, child) {
-          return Theme(
-            data: ThemeData.light().copyWith(
-              colorScheme: const ColorScheme.light(
-                primary: Colors.blueGrey, // Header background color
-                onPrimary: Colors.white, // Header text color
-                onSurface: Colors.black, // Body text color
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.blueGrey, // Button text color
-                ),
-              ),
-            ),
-            child: child!,
-          );
+        builder: (_, child) {
+          return child!;
         },
       );
 
       if (pickedTime != null) {
-        // 3. Combine date and time and update state
         setState(() {
           _selectedDateTime = DateTime(
             pickedDate.year,
@@ -138,70 +105,60 @@ class _CreateTodoScreen extends State<CreateTodoScreen> {
             pickedTime.hour,
             pickedTime.minute,
           );
-          _updateTextField(); // Update the TextField's text
+          _updateTextField();
         });
       }
     }
   }
 
-  //DateTime dateTimeObj1 = DateTime.parse(dateTimeString1);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Expanded(
-          child: Center(
-            child: Column(
-              children: [
-                Text("Create New Tood."),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
 
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: "Title",
-                    counterText: "",
-                  ),
-                  maxLength: 25,
-                  controller: _title,
-                ),
+          children: [
+            Text("Create New Tood."),
 
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: "Body",
-                    counterText: "",
-                  ),
-                  maxLength: 25,
-                  controller: _body,
-                ),
-
-                TextField(
-                  controller: _deadline,
-                  readOnly: true,
-                  onTap: () => _selectDateTime(context),
-                  decoration: const InputDecoration(
-                    hintText: 'Select Deadline',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.calendar_today),
-                  ),
-                ),
-
-                ListenableBuilder(
-                  listenable: widget.viewModel,
-                  builder: (context, _) {
-                    return FilledButton(
-                      onPressed: () {
-                        widget.viewModel.createTodo.execute((
-                          _title.value.text,
-                          _body.value.text,
-                          _deadline.value.text,
-                        ));
-                      },
-                      child: Text("Update"),
-                    );
-                  },
-                ),
-              ],
+            TextField(
+              decoration: InputDecoration(hintText: "Title", counterText: ""),
+              maxLength: 25,
+              controller: _title,
             ),
-          ),
+
+            TextField(
+              decoration: InputDecoration(hintText: "Body", counterText: ""),
+              maxLength: 25,
+              controller: _body,
+            ),
+
+            TextField(
+              controller: _deadline,
+              readOnly: true,
+              onTap: () => _selectDateTime(context),
+              decoration: const InputDecoration(hintText: 'Select Deadline'),
+            ),
+
+            ListenableBuilder(
+              listenable: widget.viewModel,
+              builder: (context, _) {
+                return FilledButton(
+                  onPressed: () {
+                    widget.viewModel.createTodo.execute((
+                      _title.value.text,
+                      _body.value.text,
+
+                      //NOTE: Parse to utc().toIso8601String
+                      _deadline.value.text,
+                    ));
+                  },
+                  child: Text("Create Todo"),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

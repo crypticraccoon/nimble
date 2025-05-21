@@ -4,7 +4,7 @@
 		"name": "Server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "45138574",
-		"_collection_link": "https://asd-9099534.postman.co/workspace/asd's-Workspace~8e7e764a-c474-4087-8c7b-da14c5dc0947/collection/45138574-b9c0a185-680d-4840-a6e4-d9d547e9cb4f?action=share&source=collection_link&creator=45138574"
+		"_collection_link": "https://asd-9099534.postman.co/workspace/8e7e764a-c474-4087-8c7b-da14c5dc0947/collection/45138574-b9c0a185-680d-4840-a6e4-d9d547e9cb4f?action=share&source=collection_link&creator=45138574"
 	},
 	"item": [
 		{
@@ -19,8 +19,16 @@
 								{
 									"listen": "test",
 									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();",
+											"if (responseJson && responseJson.token_data.access_token) {",
+											"    pm.collectionVariables.set(\"access_token\", responseJson.token_data.access_token);",
+											"    pm.collectionVariables.set(\"refresh_token\", responseJson.token_data.refresh_token);",
+											"} ",
+											""
+										],
 										"type": "text/javascript",
-										"exec": []
+										"packages": {}
 									}
 								}
 							],
@@ -43,7 +51,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"email\":\"maahase@hotmail.com\",\n\t\"password\":\"new\"\n}",
+									"raw": "{\n    \"email\": \"maahase@hotmail.com\",\n    \"password\": \"test\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -68,8 +76,11 @@
 								{
 									"listen": "test",
 									"script": {
+										"exec": [
+											""
+										],
 										"type": "text/javascript",
-										"exec": []
+										"packages": {}
 									}
 								}
 							],
@@ -100,12 +111,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{ _.sample_app_url }}/login",
+									"raw": "{{ _.sample_app_url }}/logout",
 									"host": [
 										"{{ _.sample_app_url }}"
 									],
 									"path": [
-										"login"
+										"logout"
 									]
 								}
 							},
@@ -117,8 +128,11 @@
 								{
 									"listen": "test",
 									"script": {
+										"exec": [
+											""
+										],
 										"type": "text/javascript",
-										"exec": []
+										"packages": {}
 									}
 								}
 							],
@@ -159,13 +173,70 @@
 									}
 								},
 								"url": {
-									"raw": "{{ _.sample_app_url }}/a/refresh",
+									"raw": "{{ _.sample_app_url }}/refresh",
 									"host": [
 										"{{ _.sample_app_url }}"
 									],
 									"path": [
-										"a",
 										"refresh"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Register",
+					"item": [
+						{
+							"name": "Send Email Confirmation Link",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"followRedirects": true,
+								"disableUrlEncoding": false,
+								"disableCookies": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "User-Agent",
+										"value": "insomnia/10.3.0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\":\"test@test.test\",\n\t\"password\":\"test\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ _.sample_app_url }}/register",
+									"host": [
+										"{{ _.sample_app_url }}"
+									],
+									"path": [
+										"register"
 									]
 								}
 							},
@@ -223,20 +294,18 @@
 								}
 							},
 							"response": []
-						}
-					]
-				},
-				{
-					"name": "Register",
-					"item": [
+						},
 						{
-							"name": "Register",
+							"name": "Set User Data",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
+										"exec": [
+											""
+										],
 										"type": "text/javascript",
-										"exec": []
+										"packages": {}
 									}
 								}
 							],
@@ -259,7 +328,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"email\":\"new@new.new\",\n\t\"password\":\"new\"\n}",
+									"raw": "{\n\t\"email\":\"maahase@hotmail.com\",\n\t\"password\":\"test\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -267,12 +336,174 @@
 									}
 								},
 								"url": {
-									"raw": "{{ _.sample_app_url }}/register",
+									"raw": "{{ _.sample_app_url }}/register/new/d06d2532-3127-434e-b2f0-c74d9eb02036/927056142649",
 									"host": [
 										"{{ _.sample_app_url }}"
 									],
 									"path": [
-										"register"
+										"register",
+										"new",
+										"d06d2532-3127-434e-b2f0-c74d9eb02036",
+										"927056142649"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Recover",
+					"item": [
+						{
+							"name": "Send Recovery Email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"followRedirects": true,
+								"disableUrlEncoding": false,
+								"disableCookies": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "User-Agent",
+										"value": "insomnia/10.3.0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\":\"test@test.test\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ _.sample_app_url }}/recover",
+									"host": [
+										"{{ _.sample_app_url }}"
+									],
+									"path": [
+										"recover"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": true,
+								"disableUrlEncoding": false,
+								"disableCookies": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "User-Agent",
+										"value": "insomnia/10.3.0"
+									}
+								],
+								"url": {
+									"raw": "{{ _.sample_app_url }}/recover/verify/d06d2532-3127-434e-b2f0-c74d9eb02036/927056142649",
+									"host": [
+										"{{ _.sample_app_url }}"
+									],
+									"path": [
+										"recover",
+										"verify",
+										"d06d2532-3127-434e-b2f0-c74d9eb02036",
+										"927056142649"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": true,
+								"disableUrlEncoding": false,
+								"disableCookies": false
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "User-Agent",
+										"value": "insomnia/10.3.0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\":\"new_password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ _.sample_app_url }}/recover/update/d06d2532-3127-434e-b2f0-c74d9eb02036/927056142649",
+									"host": [
+										"{{ _.sample_app_url }}"
+									],
+									"path": [
+										"recover",
+										"update",
+										"d06d2532-3127-434e-b2f0-c74d9eb02036",
+										"927056142649"
 									]
 								}
 							},
@@ -287,62 +518,16 @@
 							"name": "User",
 							"item": [
 								{
-									"name": "Create User",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"type": "text/javascript",
-												"exec": []
-											}
-										}
-									],
-									"protocolProfileBehavior": {
-										"followRedirects": true,
-										"disableUrlEncoding": false,
-										"disableCookies": false
-									},
-									"request": {
-										"method": "POST",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											},
-											{
-												"key": "User-Agent",
-												"value": "insomnia/10.3.0"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n\t\"email\":\"maahase@hotmail.com\",\n\t\"password\":\"password\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{ _.sample_app_url }}/register",
-											"host": [
-												"{{ _.sample_app_url }}"
-											],
-											"path": [
-												"register"
-											]
-										}
-									},
-									"response": []
-								},
-								{
 									"name": "Get User",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -384,8 +569,11 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -408,7 +596,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n\t\"id\":\"{{ _.sample_app_id }}\",\n\t\"username\":\"\"\n}",
+											"raw": "{\n\t\"username\":\"\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -436,8 +624,11 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -460,7 +651,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n\t\"id\":\"{{ _.sample_app_id }}\",\n\t\"password\":\"asd\",\n\t\"new_password\":\"s\"\n}\n",
+											"raw": "{\n\t\"password\":\"asd\",\n\t\"new_password\":\"s\"\n}\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -488,8 +679,11 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -512,7 +706,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n\t\"id\":\"{{ _.sample_app_id }}\",\n\t\"email\":\"asd@s.asc\"\n}\n",
+											"raw": "{\n\t\"email\":\"asd@s.asc\"\n}\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -545,8 +739,21 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -569,7 +776,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n\t\"user_id\": \"{{ _.sample_app_id }}\",\n\t\"title\":\"ew\",\n\t\"body\":\"s\",\n\t\"deadline\":\"{% now 'iso-8601', '' %}\"\n}\n",
+											"raw": "{\n\t\"title\":\"test5\",\n\t\"body\":\"test bvody\",\n\t\"deadline\":\"{{timestamp}}\"\n}\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -596,8 +803,11 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -615,15 +825,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{ _.sample_app_url }}/a/todo/{{ _.sample_app_id }}/{% response 'body', 'req_d107f90325cc4a098bbb112602231052', 'b64::JC5zdWNjZXNzLmlk::46b', 'never', 60 %}",
+											"raw": "{{ _.sample_app_url }}/a/todo/{{$randomUUID}}",
 											"host": [
 												"{{ _.sample_app_url }}"
 											],
 											"path": [
 												"a",
 												"todo",
-												"{{ _.sample_app_id }}",
-												"{% response 'body', 'req_d107f90325cc4a098bbb112602231052', 'b64::JC5zdWNjZXNzLmlk::46b', 'never', 60 %}"
+												"{{$randomUUID}}"
 											]
 										}
 									},
@@ -635,8 +844,11 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -654,15 +866,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{ _.sample_app_url }}/a/todo/{{ _.sample_app_id }}/2025-05-16/10/1",
+											"raw": "{{ _.sample_app_url }}/a/todo/2025-05-21/10/1",
 											"host": [
 												"{{ _.sample_app_url }}"
 											],
 											"path": [
 												"a",
 												"todo",
-												"{{ _.sample_app_id }}",
-												"2025-05-16",
+												"2025-05-21",
 												"10",
 												"1"
 											]
@@ -676,8 +887,11 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -699,7 +913,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{ _.sample_app_url }}/a/todo/complete/{{ _.sample_app_id }}/{% response 'body', 'req_d107f90325cc4a098bbb112602231052', 'b64::JC5zdWNjZXNzLmlk::46b', 'never', 60 %}",
+											"raw": "{{ _.sample_app_url }}/a/todo/complete/{{$randomUUID}}",
 											"host": [
 												"{{ _.sample_app_url }}"
 											],
@@ -707,8 +921,7 @@
 												"a",
 												"todo",
 												"complete",
-												"{{ _.sample_app_id }}",
-												"{% response 'body', 'req_d107f90325cc4a098bbb112602231052', 'b64::JC5zdWNjZXNzLmlk::46b', 'never', 60 %}"
+												"{{$randomUUID}}"
 											]
 										}
 									},
@@ -720,8 +933,11 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -739,14 +955,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{ _.sample_app_url }}/a/todo/{{ _.sample_app_id }}/completed/10/1",
+											"raw": "{{ _.sample_app_url }}/a/todo/completed/10/1",
 											"host": [
 												"{{ _.sample_app_url }}"
 											],
 											"path": [
 												"a",
 												"todo",
-												"{{ _.sample_app_id }}",
 												"completed",
 												"10",
 												"1"
@@ -761,8 +976,11 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -780,14 +998,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{ _.sample_app_url }}/a/todo/{{ _.sample_app_id }}/stats",
+											"raw": "{{ _.sample_app_url }}/a/todo/stats",
 											"host": [
 												"{{ _.sample_app_url }}"
 											],
 											"path": [
 												"a",
 												"todo",
-												"{{ _.sample_app_id }}",
 												"stats"
 											]
 										}
@@ -851,8 +1068,11 @@
 										{
 											"listen": "test",
 											"script": {
+												"exec": [
+													""
+												],
 												"type": "text/javascript",
-												"exec": []
+												"packages": {}
 											}
 										}
 									],
@@ -883,7 +1103,7 @@
 											}
 										},
 										"url": {
-											"raw": "{{ _.sample_app_url }}/a/todo/delete/{{ _.sample_app_id }}/{% response 'body', 'req_d107f90325cc4a098bbb112602231052', 'b64::JC5zdWNjZXNzLmlk::46b', 'never', 60 %}",
+											"raw": "{{ _.sample_app_url }}/a/todo/delete/{{$randomUUID}}",
 											"host": [
 												"{{ _.sample_app_url }}"
 											],
@@ -891,262 +1111,80 @@
 												"a",
 												"todo",
 												"delete",
-												"{{ _.sample_app_id }}",
-												"{% response 'body', 'req_d107f90325cc4a098bbb112602231052', 'b64::JC5zdWNjZXNzLmlk::46b', 'never', 60 %}"
+												"{{$randomUUID}}"
 											]
 										}
 									},
 									"response": []
 								}
 							]
-						},
-						{
-							"name": "Auth Test",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"exec": []
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"followRedirects": true,
-								"disableUrlEncoding": false,
-								"disableCookies": false
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "User-Agent",
-										"value": "insomnia/10.3.0"
-									}
-								],
-								"url": {
-									"raw": "{{ _.sample_app_url }}/a/test",
-									"host": [
-										"{{ _.sample_app_url }}"
-									],
-									"path": [
-										"a",
-										"test"
-									]
-								}
-							},
-							"response": []
 						}
-					]
-				},
-				{
-					"name": "Test",
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
 					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
 						{
 							"listen": "test",
 							"script": {
 								"type": "text/javascript",
-								"exec": []
+								"packages": {},
+								"exec": [
+									"var now = new Date();",
+									"const year = now.getFullYear();",
+									"const month = String(now.getMonth() + 1).padStart(2, '0');",
+									"const day = String(now.getDate()).padStart(2, '0');",
+									"",
+									"const hours = String(now.getHours()).padStart(2, '0');",
+									"const minutes = String(now.getMinutes()).padStart(2, '0');",
+									"const seconds = String(now.getSeconds()).padStart(2, '0');",
+									"const milliseconds = now.getMilliseconds();",
+									"",
+									"const microseconds = String(milliseconds * 1000).padStart(6, '0');",
+									"",
+									"const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${microseconds}`;",
+									"",
+									"pm.environment.set(\"timestamp\", formattedTime);",
+									"console.log(formattedTime)"
+								]
 							}
 						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true,
-						"followRedirects": true,
-						"disableUrlEncoding": false,
-						"disableCookies": false
-					},
+					]
+				},
+				{
+					"name": "Hello",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "User-Agent",
-								"value": "insomnia/10.3.0"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"email\":\"xxasdxdasdx\",\n\t\"password\":\"s\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{ _.sample_app_url }}/a/user/8cb902e4-193f-4a97-a67a-7c09072d1b85/update/username",
-							"host": [
-								"{{ _.sample_app_url }}"
-							],
-							"path": [
-								"a",
-								"user",
-								"8cb902e4-193f-4a97-a67a-7c09072d1b85",
-								"update",
-								"username"
-							]
-						}
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Well Known",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
 			]
-		},
-		{
-			"name": "New Request",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": []
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
-				"followRedirects": true,
-				"disableUrlEncoding": false,
-				"disableCookies": false
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"username\":\"a\",\n\t\"password\":\"a\"\n}\n\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/v1/test",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"v1",
-						"test"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Authed",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": []
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
-				"followRedirects": true,
-				"disableUrlEncoding": false,
-				"disableCookies": false
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {% response 'body', 'req_6afdfdd2be05492e942140e8cc0e5491', 'b64::JC50b2tlbg==::46b', 'never', 60 %}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"username\":\"a\",\n\t\"password\":\"a\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/a/welcome",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"a",
-						"welcome"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Authed",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": []
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
-				"followRedirects": true,
-				"disableUrlEncoding": false,
-				"disableCookies": false
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {% response 'body', 'req_6afdfdd2be05492e942140e8cc0e5491', 'b64::JC50b2tlbg==::46b', 'never', 60 %}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"username\":\"a\",\n\t\"password\":\"a\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost/health",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"health"
-					]
-				}
-			},
-			"response": []
 		}
 	],
 	"variable": [
@@ -1157,6 +1195,18 @@
 		{
 			"key": "sample_app_id",
 			"value": "d2362125-c8c5-4adb-9ba4-cd6753f4fe11"
+		},
+		{
+			"key": "test",
+			"value": ""
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
 		}
 	]
 }

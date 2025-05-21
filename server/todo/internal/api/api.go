@@ -11,11 +11,6 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
-
-// Add New attr to user model, isPassowordREcovery , isRegistrer(isVerifed), then before redirect to deepl link redirect to deep link /login instead add fallback link in env and docker compose 
-// TODO: Move verified to update user addiionational data, updates is_verified and checks if the user is already verified else push to login screen
-
-
 type Api struct {
 	context  context.Context
 	database *database.Database

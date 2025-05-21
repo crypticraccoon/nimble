@@ -15,6 +15,11 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+const (
+	TODO_UPDATED = "Todo updated."
+	TODO_DELETED = "Todo deleted."
+)
+
 func (a *Api) getTodo(w http.ResponseWriter, r *http.Request) {
 
 	id := uuid.FromStringOrNil(chi.URLParam(r, "id"))
@@ -62,7 +67,7 @@ func (a *Api) createTodo(w http.ResponseWriter, r *http.Request) {
 
 	if err = a.database.CreateTodo(a.context, data); err != nil {
 		if errors.Is(err, cerror.ERR_DB_USER_MISSING) {
-			response.WithError(w, http.StatusUnauthorized, cerror.ERR_DB_USER_MISSING.Error(), cerror.ERR_DB_USER_MISSING)
+			response.WithError(w, http.StatusForbidden, cerror.ERR_DB_USER_MISSING.Error(), cerror.ERR_DB_USER_MISSING)
 			return
 		}
 		response.WithError(w, http.StatusInternalServerError, cerror.ERR_DB_INSERT_FAILED.Error(), err)
@@ -174,7 +179,7 @@ func (a *Api) updateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.WithJson(w, "")
+	response.WithJson(w, TODO_UPDATED)
 }
 
 func (a *Api) completeTodo(w http.ResponseWriter, r *http.Request) {
@@ -191,7 +196,7 @@ func (a *Api) completeTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.WithJson(w, "")
+	response.WithJson(w, TODO_UPDATED)
 }
 
 func (a *Api) deleteTodo(w http.ResponseWriter, r *http.Request) {
@@ -208,5 +213,5 @@ func (a *Api) deleteTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.WithJson(w, "")
+	response.WithJson(w, TODO_DELETED)
 }

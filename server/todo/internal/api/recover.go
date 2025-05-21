@@ -23,7 +23,6 @@ func (a *Api) sendRecoveryEmail(w http.ResponseWriter, r *http.Request) {
 	data := models.Recovery{}
 
 	err := json.NewDecoder(r.Body).Decode(&data)
-
 	if err != nil {
 		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_MALFORMED_DATA.Error(), err)
 		return
@@ -40,7 +39,6 @@ func (a *Api) sendRecoveryEmail(w http.ResponseWriter, r *http.Request) {
 	serverUrl := os.Getenv("SERVER_URL")
 	redirectLink := serverUrl + "/recover/verify/" + emailBase64 + "/" + strconv.FormatInt(int64(recoveryCode), 10)
 	if mailer.Mail.IsEnabled() {
-
 		if err = mailer.Mail.SendEmailRecoveryLink(a.context, redirectLink, data.Email); err != nil {
 			response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_FAILED_TO_SEND_RECOVERY_EMAIL.Error(), err)
 			return
@@ -53,7 +51,53 @@ func (a *Api) sendRecoveryEmail(w http.ResponseWriter, r *http.Request) {
 		println(`curl --request GET --url ` + redirectLink + ` --header 'Content-Type: application/json' `)
 	}
 
+	if err = a.database.ToggleRecoveryMode(a.context, data.Email, true); err != nil {
+		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_FAILED_TO_SEND_RECOVERY_EMAIL.Error(), err)
+		return
+	}
+
 	response.WithJson(w, RECOVERY_LINK_SENT)
+}
+
+func (a *Api) verifyRecoveryEmail(w http.ResponseWriter, r *http.Request) {
+	verificationCode, err := strconv.Atoi(chi.URLParam(r, "code"))
+	if err != nil {
+		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_MALFORMED_DATA.Error(), err)
+		return
+	}
+	email, err := base64.URLEncoding.DecodeString(chi.URLParam(r, "email"))
+	if err != nil {
+		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_MALFORMED_DATA.Error(), err)
+		return
+	}
+
+	isRecoveryMode, err := a.database.GetRecoveryStatus(a.context, string(email), verificationCode)
+	if err != nil {
+		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_VERIFICATION_FAILED.Error(), err)
+		return
+	}
+
+	if !isRecoveryMode {
+		registrationVerificationLink := os.Getenv("ROOT_REDIRECT")
+		response.WithRedirect(w, r, registrationVerificationLink)
+		return
+
+	}
+
+	exists, err := a.database.VerifyRecoveryEmail(a.context, string(email), verificationCode)
+	if err != nil {
+		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_VERIFICATION_FAILED.Error(), err)
+		return
+	}
+
+	if !exists {
+		response.WithError(w, http.StatusNotFound, cerror.ERR_DB_USER_MISSING.Error(), cerror.ERR_DB_USER_MISSING)
+		return
+	}
+
+	registrationVerificationLink := os.Getenv("RECOVERY_VERIFICATION_REDIRECT") + "/" + chi.URLParam(r, "email") + "/" + strconv.FormatInt(int64(verificationCode), 10)
+
+	response.WithRedirect(w, r, registrationVerificationLink)
 }
 
 func (a *Api) updateRecoverPassowrd(w http.ResponseWriter, r *http.Request) {
@@ -101,9 +145,13 @@ func (a *Api) updateRecoverPassowrd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	if err = a.database.UpdateRecoveryPassword(a.context, string(email), string(newPasswordHash)); err != nil {
 		response.WithError(w, http.StatusInternalServerError, cerror.ERR_DB_UPDATE_FAILED.Error(), err)
+		return
+	}
+
+	if err = a.database.ToggleRecoveryMode(a.context, string(email), false); err != nil {
+		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_FAILED_TO_SEND_RECOVERY_EMAIL.Error(), err)
 		return
 	}
 

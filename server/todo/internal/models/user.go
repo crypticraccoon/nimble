@@ -18,6 +18,7 @@ type User struct {
 	IsVerified       bool       `json:"is_verified"`
 	CreatedAt        time.Time  `json:"created_at"`
 	DeletedAt        *time.Time `json:"deleted_at,omitempty"`
+	RecoveryMode     bool       `json:"recover_mode"`
 	RecoveryCode     int        `json:"recovery_code,omitempty"`
 	RecoveredAt      *time.Time `json:"recovered_at,omitempty"`
 	VerifiedAt       *time.Time `json:"verified_at,omitempty"`
@@ -96,6 +97,7 @@ func NewUser(ctx context.Context, email, password string) (*User, error) {
 		IsVerified:       false,
 		CreatedAt:        time.Now().Local(),
 		VerificationCode: utils.CreateCode(),
+		RecoveryMode:     false,
 	}
 
 	return user, nil

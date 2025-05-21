@@ -8,6 +8,33 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+func (d *Database) IsUserRegistered(ctx context.Context, id uuid.UUID) (bool, error) {
+
+	isRegisterd := false
+	err := d.conn.QueryRow(ctx,
+		`SELECT EXISTS(SEselect * from users where username is not null AND id = $1)`,
+		true, utils.GetTime(), id).Scan(&isRegisterd)
+
+	if err != nil {
+		return false, err
+	}
+
+	return isRegisterd, nil
+}
+
+func (d *Database) CheckIfUserExist(ctx context.Context, id uuid.UUID, code int) (bool, error) {
+	var exists bool
+	err := d.conn.QueryRow(ctx, "SELECT EXISTS(SELECT 1 FROM users WHERE id = $1 AND verification_code = $2)", id, code).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	if !exists {
+		return false, nil
+	}
+	return exists, nil
+}
+
 func (d *Database) VerifyUserEmail(ctx context.Context, id uuid.UUID, code int) (bool, error) {
 
 	tx, err := d.conn.BeginTx(ctx, pgx.TxOptions{})

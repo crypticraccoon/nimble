@@ -3,66 +3,17 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"github.com/gofrs/uuid"
+	"github.com/jackc/pgx/v5"
 	"net/http"
 	cerror "server/internal/errors"
 	"server/internal/models"
 	"server/internal/response"
-	"strconv"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/gofrs/uuid"
-	"github.com/jackc/pgx/v5"
 )
 
 const (
 	USER_UPDATED = "Updated."
 )
-
-func (a *Api) addUserData(w http.ResponseWriter, r *http.Request) {
-
-	verificationCode, err := strconv.Atoi(chi.URLParam(r, "code"))
-	if err != nil {
-		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_MALFORMED_DATA.Error(), err)
-		return
-	}
-	id := uuid.FromStringOrNil(chi.URLParam(r, "id"))
-	if id == uuid.Nil {
-		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_MALFORMED_DATA.Error(), cerror.ERR_API_MALFORMED_DATA)
-		return
-	}
-
-	exists, err := a.database.VerifyUserEmail(a.context, id, verificationCode)
-	if err != nil {
-		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_FAILED_UPDATE_USER.Error(), err)
-		return
-	}
-
-	if !exists {
-		response.WithError(w, http.StatusNotFound, cerror.ERR_DB_USER_MISSING.Error(), cerror.ERR_DB_USER_MISSING)
-		return
-	}
-
-	data := models.UserAdditionalData{}
-	err = json.NewDecoder(r.Body).Decode(&data)
-
-	if err != nil {
-		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_MALFORMED_DATA.Error(), err)
-		return
-	}
-
-	if isValid := data.IsValid(); !isValid {
-		response.WithError(w, http.StatusBadRequest, cerror.ERR_API_MALFORMED_DATA.Error(), cerror.ERR_API_MALFORMED_DATA)
-		return
-	}
-
-	if err = a.database.UpdateUserAdditionalData(a.context, &data, id); err != nil {
-
-		response.WithError(w, http.StatusInternalServerError, cerror.ERR_API_FAILED_UPDATE_USER.Error(), err)
-		return
-	}
-
-	response.WithJson(w, "")
-}
 
 func (a *Api) getUserData(w http.ResponseWriter, r *http.Request) {
 	id := uuid.FromStringOrNil(r.Context().Value("userID").(string))
@@ -124,7 +75,7 @@ func (a *Api) updatePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := user.CheckPassword(pwdHash, data.Password); err != nil {
-		response.WithError(w, http.StatusUnauthorized, cerror.ERR_API_FAILED_TO_UPDATE_PASSWORD.Error(), err)
+		response.WithError(w, http.StatusForbidden, cerror.ERR_API_FAILED_TO_UPDATE_PASSWORD.Error(), err)
 		return
 	}
 

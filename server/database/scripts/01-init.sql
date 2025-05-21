@@ -2,7 +2,7 @@ CREATE TABLE users (
 	id 								UUID PRIMARY KEY NOT NULL,
 	username  				VARCHAR(25),
 	email 						VARCHAR(30) NOT NULL,
-	password 					VARCHAR(30) NOT NULL,
+	password 					VARCHAR(100) NOT NULL,
 	created_at 				TIMESTAMP NOT NULL,
 	deleted_at 				TIMESTAMP,
 	recovery_code 		VARCHAR(12),

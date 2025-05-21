@@ -283,7 +283,7 @@ class TodoRepository {
   Future<Result<TodoResponse>> createTodo({
     required String title,
     required String body,
-    required DateTime deadline,
+    required String deadline,
   }) async {
     final result = await _apiClient.createTodo(
       accessToken: await _fetchAccessToken() ?? "",

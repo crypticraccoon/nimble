@@ -23,7 +23,7 @@ class _RegistrationScreen extends State<RegistrationScreen> {
   @override
   void initState() {
     super.initState();
-    widget.viewModel.registerUser.removeListener(_onResult);
+    widget.viewModel.registerUser.addListener(_onResult);
   }
 
   @override
@@ -154,27 +154,4 @@ class _RegistrationScreen extends State<RegistrationScreen> {
       ),
     );
   }
-
-  //TODO: Update localization
-
-  //@override
-  //void initState() {
-  //super.initState();
-  //}
-
-  //@override
-  //void didUpdateWidget(covariant RegistrationScreen oldWidget) {
-  //super.didUpdateWidget(oldWidget);
-  //}
-
-  //@override
-  //void dispose() {
-  //super.dispose();
-  //}
-
-  //@override
-  //Widget build(BuildContext context) {
-
-  //return Scaffold(body: Text("Registration Screen"));
-  //}
 }

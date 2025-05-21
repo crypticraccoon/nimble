@@ -21,6 +21,7 @@ const (
 )
 
 func (a *Api) register(w http.ResponseWriter, r *http.Request) {
+	println("asd")
 	data := models.Register{}
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -47,7 +48,15 @@ func (a *Api) register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = a.database.RegisterUser(a.context, *newUser); err != nil {
+	if err = a.database.RegisterUser(a.context, newUser); err != nil {
+		println(newUser.CreatedAt.String())
+		println(newUser.Email)
+		println(newUser.Password)
+		println(newUser.Username)
+		println(newUser.RefreshToken)
+		println(newUser.IsVerified)
+		println(newUser.Id.IsNil())
+		println(err.Error());
 		if errors.Is(err, cerror.ERR_DB_USER_EXISTS) {
 			response.WithError(w, http.StatusConflict, err.Error(), err)
 			return

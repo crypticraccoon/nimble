@@ -21,19 +21,16 @@ class CreateTodoViewModel extends ChangeNotifier {
   ) async {
     final (String title, String body, String deadline) = credentials;
 
-    print(deadline);
-
-    return Result.ok(null);
-    //final result = await _todoRepository.createTodo(
-    //body: body,
-    //title: title,
-    //deadline: DateTime.now(),
-    //);
-    //switch (result) {
-    //case Ok<TodoResponse>():
-    //return Result.ok(result.value);
-    //case Error<TodoResponse>():
-    //return Result.error(result.error);
-    //}
+    final result = await _todoRepository.createTodo(
+      body: body,
+      title: title,
+      deadline: deadline,
+    );
+    switch (result) {
+      case Ok<TodoResponse>():
+        return Result.ok(result.value);
+      case Error<TodoResponse>():
+        return Result.error(result.error);
+    }
   }
 }

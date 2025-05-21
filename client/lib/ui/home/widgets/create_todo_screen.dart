@@ -63,8 +63,7 @@ class _CreateTodoScreen extends State<CreateTodoScreen> {
 
   void _updateTextField() {
     if (_selectedDateTime != null) {
-      final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
-      _deadline.text = formatter.format(_selectedDateTime!);
+      _deadline.text = _selectedDateTime!.toIso8601String();
     } else {
       _deadline.text = '';
     }

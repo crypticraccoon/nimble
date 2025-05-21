@@ -10,7 +10,9 @@ CREATE TABLE users (
 	is_verified 			BOOLEAN NOT NULL DEFAULT FALSE,
 	verified_at 			TIMESTAMP,
 	verification_code VARCHAR(12),
-	refresh_token     TEXT
+	refresh_token     TEXT,
+  recovery_mode 		BOOLEAN NOT NULL DEFAULT FALSE
+
 );
 
 CREATE TABLE todos(

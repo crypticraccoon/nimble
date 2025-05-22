@@ -346,7 +346,7 @@ class ApiClient {
     required String deadline,
   }) async {
     final client = _clientFactory;
-
+    print(jsonEncode({"title": title, "body": body, "deadline": deadline}));
     try {
       final response = await client.post(
         "$_url/a/todo/create",
@@ -546,4 +546,3 @@ class ApiClient {
     }
   }
 }
-

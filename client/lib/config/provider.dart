@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 List<SingleChildWidget> get providers {
-	const _url = "http://0.0.0.0:3000/v1";
-	//const _url = "http://18.222.130.128:80/v1";
+	//const _url = "http://0.0.0.0:3000/v1";
+	const _url = "http://18.222.130.128:80/v1";
 
   return [
     Provider(create: (context) => ApiClient(url: _url)),

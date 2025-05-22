@@ -12,8 +12,7 @@ func (d *Database) IsUserRegistered(ctx context.Context, id uuid.UUID) (bool, er
 
 	isRegisterd := false
 	err := d.conn.QueryRow(ctx,
-		`SELECT EXISTS(SEselect * from users where username is not null AND id = $1)`,
-		true, utils.GetTime(), id).Scan(&isRegisterd)
+		`SELECT EXISTS(select * from users where username is not null AND id = $1)`, id).Scan(&isRegisterd)
 
 	if err != nil {
 		return false, err

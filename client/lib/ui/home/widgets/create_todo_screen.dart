@@ -34,26 +34,27 @@ class _CreateTodoScreen extends State<CreateTodoScreen> {
   }
 
   void _onResult() {
-    if (widget.viewModel.createTodo.completed) {
-      String res = widget.viewModel.createTodo.responseData as String;
-      widget.viewModel.createTodo.clearResult();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("$res. Email updated.")));
-      context.go("/home");
-    }
+    //print(widget.viewModel.createTodo.error);
+    //if (widget.viewModel.createTodo.completed) {
+    //String res = widget.viewModel.createTodo.responseData as String;
+    //widget.viewModel.createTodo.clearResult();
+    //ScaffoldMessenger.of(
+    //context,
+    //).showSnackBar(SnackBar(content: Text("$res. ")));
+    //context.go("/home");
+    //}
 
-    if (widget.viewModel.createTodo.error) {
-      String hasError =
-          widget.viewModel.createTodo.errorMessage != null
-              ? widget.viewModel.createTodo.errorMessage!
-              : "";
+    //if (widget.viewModel.createTodo.error) {
+    //String hasError =
+    //widget.viewModel.createTodo.errorMessage != null
+    //? widget.viewModel.createTodo.errorMessage!
+    //: "";
 
-      widget.viewModel.createTodo.clearResult();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(hasError)));
-    }
+    //widget.viewModel.createTodo.clearResult();
+    //ScaffoldMessenger.of(
+    //context,
+    //).showSnackBar(SnackBar(content: Text(hasError)));
+    //}
   }
 
   final TextEditingController _title = TextEditingController(text: '');
@@ -148,8 +149,6 @@ class _CreateTodoScreen extends State<CreateTodoScreen> {
                     widget.viewModel.createTodo.execute((
                       _title.value.text,
                       _body.value.text,
-
-                      //NOTE: Parse to utc().toIso8601String
                       _deadline.value.text,
                     ));
                   },

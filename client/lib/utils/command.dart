@@ -29,15 +29,18 @@ abstract class Command<T> extends ChangeNotifier {
 
   Future<void> _execute(CommandAction0<T> action) async {
     if (_running) return;
-
     _running = true;
     _result = null;
     notifyListeners();
 
     try {
       _result = await action();
+      print("trying");
+      print(_result);
+      print("=======");
     } finally {
       _running = false;
+      print("finished");
       notifyListeners();
     }
   }

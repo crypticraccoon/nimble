@@ -26,6 +26,7 @@ class CreateTodoViewModel extends ChangeNotifier {
       title: title,
       deadline: deadline,
     );
+    //return result;
     switch (result) {
       case Ok<TodoResponse>():
         return Result.ok(result.value);

@@ -25,10 +25,10 @@ func (d *Database) RegisterUser(ctx context.Context, user *models.User) error {
 	if exists {
 		return cerror.ERR_DB_USER_EXISTS
 	}
-	println(user.Id.String(), user.Email, user.Password, user.IsVerified, user.CreatedAt.String())
+	println(user.VerificationCode)
 	_, err = tx.Exec(ctx,
-		"INSERT INTO users (id, email, password, is_verified, created_at ) VALUES ($1, $2, $3, $4, $5)",
-		user.Id, user.Email, user.Password, user.IsVerified, user.CreatedAt)
+		"INSERT INTO users (id, email, password, is_verified, created_at, verification_code ) VALUES ($1, $2, $3, $4, $5, $6)",
+		user.Id, user.Email, user.Password, user.IsVerified, user.CreatedAt, user.VerificationCode)
 	if err != nil {
 		return err
 	}
@@ -38,6 +38,7 @@ func (d *Database) RegisterUser(ctx context.Context, user *models.User) error {
 	}
 	return nil
 }
+
 func (d *Database) UpdateRefreshToken(ctx context.Context, id uuid.UUID, refreshToken string) error {
 	sql := `UPDATE users SET refresh_token = $1 WHERE id = $2`
 	_, err := d.conn.Exec(ctx, sql, refreshToken, id)

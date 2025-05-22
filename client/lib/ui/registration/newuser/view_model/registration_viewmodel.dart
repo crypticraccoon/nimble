@@ -24,8 +24,6 @@ class RegistrationViewmodel extends ChangeNotifier {
       email: email,
       password: password,
     );
-print(result);
     return result;
-
   }
 }

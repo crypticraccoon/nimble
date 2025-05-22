@@ -5,11 +5,11 @@ CREATE TABLE users (
 	password 					VARCHAR(100) NOT NULL,
 	created_at 				TIMESTAMP NOT NULL,
 	deleted_at 				TIMESTAMP,
-	recovery_code 		VARCHAR(12),
+	recovery_code 		BIGINT,
 	recovered_at 			TIMESTAMP,
 	is_verified 			BOOLEAN NOT NULL DEFAULT FALSE,
 	verified_at 			TIMESTAMP,
-	verification_code VARCHAR(12),
+	verification_code BIGINT,
 	refresh_token     TEXT,
   recovery_mode 		BOOLEAN NOT NULL DEFAULT FALSE
 
